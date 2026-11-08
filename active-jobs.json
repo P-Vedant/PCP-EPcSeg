@@ -1,11 +1,16 @@
 {
   "jobs": [
     {
+      "pid": 568,
+      "machine": "A",
+      "started": "2026-11-08T03:04:19.850790+00:00",
+      "source_commit": "b9a9b451abfec551d05055c775ed3fe164012f2f",
+      "script": "scripts/prepare_full.py",
+      "stdout": "prepare-full.log",
+      "stderr": "prepare-full.err.log",
+      "status": "running",
       "must_keep_running": true,
-      "log": "dev120.log",
-      "kind": "dev120 three-seed matrix",
-      "pid": 11740,
-      "error": "dev120.err.log"
+      "official_test_evaluation": false
     }
   ]
 }
