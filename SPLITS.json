@@ -1,0 +1,42 @@
+{
+  "protocol": "development subset; official train-0 validation; other train folds training",
+  "official_folds_sha256": "ced97a50b55504007216165167a1b3995312434ee50f7f93f8728fca3c6ac67d",
+  "dataset_sha256": "79519369a1d32b63efd86b907013cacb5e02a68e4d711cdde20a23cdfe16ba7c",
+  "locked_test_enabled": false,
+  "family_audit": "pending sequence clustering/CATH and prior-exposure IDs",
+  "uniprot_overlap": [],
+  "train": [
+    "1a4uB",
+    "1a8dA",
+    "1ad1A",
+    "1ak1A",
+    "1aylA",
+    "1b0iA",
+    "1bfnA",
+    "1bhsA",
+    "1c3kA",
+    "1cuzA",
+    "1dc6A",
+    "1dklA",
+    "1dpjA",
+    "1dteA",
+    "1e3gA",
+    "1eccB",
+    "1eswA",
+    "1fd9A",
+    "1fvrA",
+    "1fwkC",
+    "1g24C"
+  ],
+  "val": [
+    "1byiA",
+    "1dqzA",
+    "1e5lB",
+    "1efhB",
+    "1ezlC",
+    "1f47B",
+    "1fdpA",
+    "1ffhA"
+  ],
+  "test": []
+}
