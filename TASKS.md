@@ -12,3 +12,5 @@
 | T08 | B | unassigned / remote unverified | T04 | cross-3070 checkpoint load and independent jobs; see docs/MACHINE_B.md |
 
 Shared schema v1 is in docs/SCHEMA.md; A integrates schema changes. B must use disjoint SHA-256 shard IDs and separate run directories. This is not a Git-based live queue. Do not concurrently append one shared manifest across machines.
+
+T05 completed first matched IF runs; no improvement over forest. T06 coverage executed: 8/29 valid energy contexts. Matched energy/missingness ablations and official predictor still pending.

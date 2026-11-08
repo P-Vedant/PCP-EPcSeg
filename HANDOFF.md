@@ -38,3 +38,7 @@ The master prompt's desktop 5070 Ti assumption was false: local GPU is 8 GB lapt
 Keep official benchmark split separate from any new independent test. Exposure list includes 16 apo and paired chains plus known CATH topology 3.40.190 overlap (3PPN/4P0I). Exact-ID exclusion is insufficient: aliases, sequences, close homologs and family metadata must be audited. No locked test evaluation enabled. Partner commands are unverified remotely. No submission/publication or paid cloud compute.
 
 After each task update state/handoff/tasks, record PIDs/logs/checkpoint hashes, commit/push coherent source stages to existing origin, and provide the next continuation block. Preserve data/checkpoints outside Git.
+
+ACTIVE FEATURE JOB: PID 40820, machine A, scripts/run_features_dev.py, logs features-dev.log and features-dev.err.log. Keep running; do not duplicate. Launched after feature-stage commit; check git log -1.
+
+LATEST: PID 40820 job completed successfully (FEATURE DEVELOPMENT STAGE COMPLETE in features-dev.log). No running jobs to preserve. All three dev24-if runs exist: do not rerun launcher. Energy 8/29 valid; index data/energy-24/index.json. Next: energy/no-energy/missingness controls, expand to120, bounded official predictor install. PocketMiner install was not executed because automatic approval review reached usage limit. Resume only after approval service recovers.

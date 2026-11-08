@@ -28,3 +28,5 @@ Candidate formation coverage: 1,638 / 1,854 true resolved formed contacts (~88.3
 See active-job.json (or active-jobs.json if present) and HANDOFF.md before starting jobs. Matched IF runs and energy coverage are the next stage. Expand official-training-only data after these checks; full benchmark and family-separated evaluation remain pending. External PocketMiner/pLM baselines, energy usefulness/missingness controls, additional seeds, pocket-level localization, family CIs, full prior-homolog/CATH audit, and cross-GPU loading are not completed. Candidate-state energy/surfaces are optional and unimplemented.
 
 PowerShell execution policy blocks .ps1 launch on this device. Use Python launchers; system policy was not changed. Everything required to continue is on disk. Do not rerun existing run IDs or overwrite checkpoints.
+
+Feature stage completed: IF regional macro-AP 0.1335144, IF auxiliary 0.1341352, IF pocket-only 0.1356839. Energy preparation succeeded for 8/29 proteins; coverage index data/energy-24/index.json. No active training jobs. External PocketMiner install did NOT start: automatic approval review hit usage limit.
