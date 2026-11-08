@@ -16,3 +16,4 @@ external/
 .env
 *.log
 *.egg-info/
+.venv*/

@@ -1,0 +1,14 @@
+{
+  "jobs": [
+    {
+      "kind": "PocketMiner install",
+      "log": "install-pocketminer.log",
+      "pid": 2196
+    },
+    {
+      "kind": "prepare120",
+      "log": "prepare-120.log",
+      "pid": 38680
+    }
+  ]
+}

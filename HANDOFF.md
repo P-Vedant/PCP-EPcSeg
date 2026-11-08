@@ -42,3 +42,7 @@ After each task update state/handoff/tasks, record PIDs/logs/checkpoint hashes, 
 ACTIVE FEATURE JOB: PID 40820, machine A, scripts/run_features_dev.py, logs features-dev.log and features-dev.err.log. Keep running; do not duplicate. Launched after feature-stage commit; check git log -1.
 
 LATEST: PID 40820 job completed successfully (FEATURE DEVELOPMENT STAGE COMPLETE in features-dev.log). No running jobs to preserve. All three dev24-if runs exist: do not rerun launcher. Energy 8/29 valid; index data/energy-24/index.json. Next: energy/no-energy/missingness controls, expand to120, bounded official predictor install. PocketMiner install was not executed because automatic approval review reached usage limit. Resume only after approval service recovers.
+
+Approval service recovered. ACTIVE: PocketMiner installation PID 2196 (install-pocketminer.log); development prepare120 PID 38680 (prepare-120.log). Keep running; inspect active-jobs.json, do not duplicate. No system policy changes.
+
+PocketMiner first install failed building optional MDTraj. Reduced official-model environment installing as PID 11988, logs install-pocketminer-core.log/.err.log. Adapter scripts/pocketminer_baseline.py uses equivalent author tensor ordering/units with explicit BioPython residue mapping and strict checkpoint restore verification; no prediction executed yet.
