@@ -1,0 +1,13 @@
+# Predeclared exposure and structural-family screen
+
+Scope: official training-pool prepared examples only. No official-test scores or targets are read. The16 prior apo chains AND their16 paired chains are development exposure. Selected apo and paired holo endpoints are audited; holo metadata is used only for split/provenance checks, never inference features.
+
+Use complete canonical polymer sequences from mmCIF entity_poly, exact author-chain mapping, and UniProt references from struct_ref/struct_ref_seq. Merge isoform accessions conservatively at the base accession. Record missing/ambiguous sequences; do not substitute resolved sequences silently. Global alignment uses match2/mismatch-1/gap-open-5/gap-extension-.5; identity counts only matching standard amino acids. Screen at30%identity and80%coverage of the longer full chain. Exact duplicate sequences and structure/UniProt aliases are excluded. A mathematically safe length-ratio filter skips pairs unable to reach80%coverage. Long (>5000) or >5%unknown sequences are unresolved.
+
+Use the downloaded CATH4.4.0 classification and SEQRES boundaries, with file SHA-256s. Require >=80%full-chain boundary coverage for both selected endpoints in a screened validation candidate. Exclude any shared C.A.T topology with training or known prior exposure. This is deliberately more conservative than a homologous-superfamily-only screen. The supplied3PPN/4P0I topology3.40.190 overlap is retained even if an annotation is missing. Missing/out-of-range CATH boundaries fail the coverage check.
+
+The output screened-index.json keeps the original training rows and only eligible validation rows. It is a **post-hoc development slice, not an independent test or replacement official protocol**. Unknown prior annotations, incomplete domains, remote/domain-level homology, SCOP relationships and pretrained-model overlap remain limitations. No test unlock follows automatically, even if some validation rows survive. Official folds.json and all existing run indices/checkpoints remain unchanged.
+
+Reproduce: `.venv\Scripts\python.exe -u scripts/audit_exposure.py`. Cache/progress live in data/exposure-audit-v1; SQLite caches exact full-sequence comparisons. Read active-jobs.json before restarting.
+
+CATH source: https://www.cathdb.info/download and https://download.cathdb.info/cath/releases/latest-release/cath-classification-data/ . Attribution: CATH by I.Sillitoe and collaborators, CC BY4.0 as stated on CATH domain pages; Waman et al., CATH v4.4, Nucleic Acids Research2025, doi:10.1093/nar/gkae1087. Raw CATH files are cached locally and not redistributed in Git.

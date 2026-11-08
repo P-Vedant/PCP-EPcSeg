@@ -35,3 +35,5 @@ Pending: full-data coverage; prior aliases/duplicate/full-sequence/homolog/CATH/
 Data/cache/checkpoints/external code/environments remain ignored. Source/state commits are pushed to the user's existing origin. PowerShell .ps1 execution was blocked; Python launchers are used without changing system policy. Read HANDOFF.md for next commands.
 
 Full training-data preparation worker complete at 2026-11-08T03:33:04.513846+00:00; PID 568 no longer needs to run. See docs/FULL_DATA_PREP_STATUS.json, docs/FULL_DATA_PREP_HANDOFF.md and prepare-full.log. Official test remains locked.
+
+Full preparation completed/pushed:569train/175val,141exclusions,321resolved-sequence cross-split links. No live old worker. New full-polymer/alias/CATH audit implemented and targeted tests passed; policy predeclared in docs/EXPOSURE_AUDIT.md.
