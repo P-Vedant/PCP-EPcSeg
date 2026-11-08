@@ -61,3 +61,5 @@ Use the isolated .venv; see requirements-lock.txt and requirements-pocketminer-l
 Full training-data preparation worker complete at 2026-11-08T03:33:04.513846+00:00; PID 568 no longer needs to run. See docs/FULL_DATA_PREP_STATUS.json, docs/FULL_DATA_PREP_HANDOFF.md and prepare-full.log. Official test remains locked.
 
 NEXT ACTIVE STAGE: scripts/audit_exposure.py; full polymer sequences, prior32chains, apo/holo aliases and CATH4.4topology/coverage. See docs/EXPOSURE_AUDIT.md. No model training or test scoring. Outputs data/exposure-audit-v1/report.json and screened-index.json; remains post-hoc development screening. Check active-jobs.json/logs before duplicate launch.
+
+Localization command ready: .venv\Scripts\python.exe scripts/evaluate_localization.py. Outputs numeric centers/memberships and docs/LOCALIZATION_RESULTS.md. Fixed protocol is an apo-residue-centroid proxy, not exact published DCC. Exposure worker continues independently; do not duplicate.

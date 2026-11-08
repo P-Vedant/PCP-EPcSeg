@@ -16,3 +16,5 @@ Stable schema: docs/SCHEMA.md. A integrates schema/model/trainer; B owns indepen
 Full training-data preparation worker complete at 2026-11-08T03:33:04.513846+00:00; PID 568 no longer needs to run. See docs/FULL_DATA_PREP_STATUS.json, docs/FULL_DATA_PREP_HANDOFF.md and prepare-full.log. Official test remains locked.
 
 T02 full official-training preparation COMPLETE; exposure/CATH screen now implemented/tested, execution next. No new independent-test claim.
+
+T04 pocket-level localization proxy implemented/tested; execution next. T02 exposure/CATH audit running.

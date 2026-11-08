@@ -37,3 +37,5 @@ Data/cache/checkpoints/external code/environments remain ignored. Source/state c
 Full training-data preparation worker complete at 2026-11-08T03:33:04.513846+00:00; PID 568 no longer needs to run. See docs/FULL_DATA_PREP_STATUS.json, docs/FULL_DATA_PREP_HANDOFF.md and prepare-full.log. Official test remains locked.
 
 Full preparation completed/pushed:569train/175val,141exclusions,321resolved-sequence cross-split links. No live old worker. New full-polymer/alias/CATH audit implemented and targeted tests passed; policy predeclared in docs/EXPOSURE_AUDIT.md.
+
+Pocket-localization proxy implemented with fixed apo-only candidate clustering, annotated-residue target centroids and one-to-one4A matching; targeted invariance/matching tests passed. Evaluation next, no threshold tuning or ligand-center-DCC claim.
