@@ -1,58 +1,59 @@
-# Continuation handoff
+# Handoff — continue, do not restart
 
-Continue the existing checkout; do not restart: `C:\Users\nagan\PCP-EPcSeg\PCP-EPcSeg`.
-Read docs/MASTER_PROMPT.md, PROJECT_STATE.md, TASKS.md, DATA_AUDIT.md and configs/prior_exposure.json.
-Branch: research/bootstrap. Core experiment revision: e3c8d0c; feature-stage revisions are later commits (use `git log -3 --oneline`). No AGENTS.md was present. Preserve any later user edits.
+Existing checkout: C:\Users\nagan\PCP-EPcSeg\PCP-EPcSeg
+Read AGENTS.md, PROJECT_STATE.md, TASKS.md, DATA_AUDIT.md, CLAIMS.md and docs/MASTER_PROMPT.md.
+Required implementation:169c2075476de808ae7242c770d75ed08f97ada3 or later on research/bootstrap. Do not check out an older revision over current files. A is an8GB RTX5070 Laptop; B remains unavailable.
 
-## Current files / jobs
+## Live work and first commands
 
-- Completed runs: runs/dev24-{baseline,regional,auxiliary,pocket}-s17. Checkpoint: runs/dev24-regional-s17/best.pt. Baseline revision recorded in each run's provenance.json; root RUN_MANIFEST.jsonl is append-only.
-- Data: data/prepared-24/index.json (21 train, 8 val), data/features-24/index.json (29/29 frozen IF coverage), outputs/profile.json, outputs/hardware.json.
-- Verified transfer: outputs/dev24-transfer.zip, SHA-256 `814a368c829cf368a0a707b08de98a160259959357924d429f11cc2ffdd38904`. Contains only checkpoint/index/one shard, not a full dataset. Validation: outputs/artifact-checks.json.
-- Check active-job.json and logs before launching anything. The old PID 36156 completed scripts/run_dev.py. The older PowerShell PID 44620 failed before running experiments.
-- Installation is complete; no need to redownload torch or MPNN. `.venv\Scripts\python.exe` is the interpreter. Source is editable in this checkout and visible in VS Code.
-
-## Next three concrete actions
-
-1. Finish T05/T06: inspect feature stage logs and `data/energy-24/coverage.json`. If no live feature job and runs/dev24-if-regional-s17 does not exist, run `.venv\Scripts\python.exe -u scripts/run_features_dev.py`. Expected: three matched IF runs and energy index with explicit coverage/failures. If partially complete, run only missing CLI stages, not the entire launcher.
-2. Expand T02: `.venv\Scripts\python.exe -m pcp prepare --limit 120` then `.venv\Scripts\python.exe -m pcp audit --index data/prepared-120/index.json`. Expected: up to 120 training + 40 validation examples, exclusions and overlap audit. These remain a development subset. Full official train pool is still pending. Do not evaluate test.
-3. Complete comparisons on the **same rows**: train regional/auxiliary/pocket with IF using new immutable run IDs; evaluate no-energy and missingness controls before enabling energy. Use the fixed configs as templates and preserve resolved configs. Then implement an official external predictor (PocketMiner or CryptoBench pLM); README links in docs/PRIOR_ART.md. Expected: a numeric matched evidence table, with no novelty claim unless it survives the declared gate.
-
-## Exact useful commands
+The completed development jobs must NOT be rerun. A full official-training preparation/audit worker is being launched immediately after this handoff commit. Its actual PID, source revision and phase are in active-jobs.json (plural). The singular active-job.json is an older completed-stage record.
 
 ```powershell
+Set-Location 'C:\Users\nagan\PCP-EPcSeg\PCP-EPcSeg'
 git status --short
-Get-Content active-job.json
-Get-Content features-dev.log -Tail 15
-Get-Content features-dev.err.log -Tail 15
-.venv\Scripts\python.exe -m unittest discover -s tests -v
-.venv\Scripts\python.exe -m pcp train --index data/prepared-24/index.json --run runs/dev24-regional-s17 --config configs/dev-regional.json --resume runs/dev24-regional-s17/last.pt
+Get-Content active-jobs.json
+Get-Content prepare-full.log -Tail 12
+Get-Content prepare-full.err.log -Tail 12
 ```
 
-The resume command for the completed run verifies load/final evaluation but has no remaining epochs. To extend training, create an explicit new experiment policy; do not silently change a resume config. `verify_artifacts.py` was executed already and intentionally refuses to overwrite its transfer outputs.
+Keep a live scripts/prepare_full.py process running; do not launch duplicates. It creates data/prepared-666/index.json and audit.json, records counts/exclusions, appends state and commits/pushes authorized status. It will not score test, launch new training, or change architecture. If the branch/remote changes or user changes are staged, it saves locally and skips auto-push. If narrative state files changed concurrently, it appends but does not stage those user changes. Check docs/FULL_DATA_PREP_STATUS.json and docs/FULL_DATA_PREP_HANDOFF.md after completion. Failed push does not imply failed data preparation.
 
-## Caveats that must survive handoff
+## Next three actions / exit conditions
 
-The master prompt's desktop 5070 Ti assumption was false: local GPU is 8 GB laptop 5070. Region mechanism has not beaten geometry forest. Only 8 validation proteins, no family-level confidence claim. One pair per apo is chosen deterministically among main entries; pocket labels union all pairs on selected chain; contact labels use only the selected pair. Multi-chain IDs such as A-B are excluded with reasons; full multichain graph support pending. Standard modified residues and missing heavy atoms limit coverage. Apo structure may retain unrelated cofactors in raw context; no target ligand/holo coordinates enter inference. PDB inference insertion numbering is less rigorous than mmCIF. Energy force is a strain proxy, not local energy or opening probability. Retained cofactor template failures are not repaired by deleting cofactors.
+1. T02: finish/inspect the worker above. Expected: complete status, hashed full eligible training-pool index, explicit exclusions and sequence-overlap audit. If no live worker and no completed index, run `.venv\Scripts\python.exe -u scripts/prepare_full.py` with logs; it reuses downloaded structures. Do not restart a live worker.
+2. T02: audit all16 prior apo/paired chains, aliases, close homologs and structural families before defining independent evidence. Inspect existing results with `.venv\Scripts\python.exe -c "import json; d=json.load(open('data/prepared-666/audit.json')); print({k:v for k,v in d.items() if k!='excluded'})"`. Implement the missing full-exposure/CATH/SCOP audit; current global sequence screening is insufficient. Expected: a documented strict-analysis split separate from original official folds, or explicit unresolved coverage. Keep test results locked.
+3. If continuing full-data reproduction after the failed regional promotion gate, run `.venv\Scripts\python.exe -m pcp features --index data/prepared-666/index.json --output data/features-666`. Expected: hashed frozen-feature index with coverage/failure reasons. Add a strong sequence baseline and pocket-level localization metrics before claiming competitiveness; predeclare the remaining comparisons. Do not expand architecture or reinterpret tiny auxiliary-head gains as novelty.
 
-Keep official benchmark split separate from any new independent test. Exposure list includes 16 apo and paired chains plus known CATH topology 3.40.190 overlap (3PPN/4P0I). Exact-ID exclusion is insufficient: aliases, sequences, close homologs and family metadata must be audited. No locked test evaluation enabled. Partner commands are unverified remotely. No submission/publication or paid cloud compute.
+## Completed evidence
 
-After each task update state/handoff/tasks, record PIDs/logs/checkpoint hashes, commit/push coherent source stages to existing origin, and provide the next continuation block. Preserve data/checkpoints outside Git.
+- Small cohort21train/8val: geometry baselines,3neural modes with/without IF, energy bounded/concat/mask-only, IF-shuffle controls and official PocketMiner.
+- Larger97train/35val:132/132MPNN extraction;9neural runs at20epochs, seeds17/23/47; official PocketMiner on35same validation proteins. Read docs/DEV120_RESULTS.md (regenerate with `.venv\Scripts\python.exe scripts/report120.py`).
+- Regional meanAP .255615 vs auxiliary .255062; PocketMiner .262020. Same-mask regional mean-seed minus PocketMiner -.005872, protein bootstrap95%[-.050246,.039338]. Promotion gate not met. Nine sequence-overlap pairs; no family-disjoint claim.
+- CUDA optimizer, rigid-motion invariance/apo-only schema, finite one-batch overfit, exact optimizer checkpoint next-step equivalence, missing-energy masking, transfer path safety and full hash import passed. Diagnostic evaluation replay matches saved AP exactly. Apo-only IF inference matches prepared features within1.2e-6. No cross-3070 execution claimed.
+- OpenMM coverage8/29 (5train,3val); no-energy retained for larger stage. Native NLL is not energy; forces are not local energies; two endpoints are not a trajectory or opening probability.
 
-ACTIVE FEATURE JOB: PID 40820, machine A, scripts/run_features_dev.py, logs features-dev.log and features-dev.err.log. Keep running; do not duplicate. Launched after feature-stage commit; check git log -1.
+## Checkpoints and transfer
 
-LATEST: PID 40820 job completed successfully (FEATURE DEVELOPMENT STAGE COMPLETE in features-dev.log). No running jobs to preserve. All three dev24-if runs exist: do not rerun launcher. Energy 8/29 valid; index data/energy-24/index.json. Next: energy/no-energy/missingness controls, expand to120, bounded official predictor install. PocketMiner install was not executed because automatic approval review reached usage limit. Resume only after approval service recovers.
+Representative fixed-seed checkpoint: runs/dev120-if-regional-s17/best.pt
+SHA256: ffc1d268b721c615e924bdcdaaba2099a62c5a1d4f9e4c4ab04e8726767cf482
+Last resume checkpoint: runs/dev120-if-regional-s17/last.pt (already20epochs complete).
+Input index: data/features-120/index.json. All runs include resolved config/provenance/hardware/metrics and per-residue/contact/region NPZ predictions. Root RUN_MANIFEST.jsonl is append-only.
 
-Approval service recovered. ACTIVE: PocketMiner installation PID 2196 (install-pocketminer.log); development prepare120 PID 38680 (prepare-120.log). Keep running; inspect active-jobs.json, do not duplicate. No system policy changes.
+Complete selected transfer: outputs/dev120-regional-s17-transfer.zip
+SHA256: cd0cc3ef4a90a455b29cbd9da70361e9d0190449b74f973f0d931abca1d63ca4
+139files: all132cached data shards plus index and six run artifacts. Import verified at outputs/transfer-120-check. Raw structures and external weights are not in this archive; scripts/fetch_external.py fetches pinned author weights/code. No transfer service was invented.
 
-PocketMiner first install failed building optional MDTraj. Reduced official-model environment installing as PID 11988, logs install-pocketminer-core.log/.err.log. Adapter scripts/pocketminer_baseline.py uses equivalent author tensor ordering/units with explicit BioPython residue mapping and strict checkpoint restore verification; no prediction executed yet.
+## Reproduction commands
 
-Energy controls launched PID 35428, energy-controls.log/.err.log: bounded, true concatenation, mask-only, within-protein IF shuffle. Code regression tests passed. Original no-energy architecture unchanged.
+```powershell
+.venv\Scripts\python.exe -m unittest discover -s tests -v
+.venv\Scripts\python.exe -m pcp infer --structure data/raw/1a4u.cif --chain B --sequence outputs/resolved-chain.fasta --checkpoint runs/dev120-if-regional-s17/best.pt --out outputs/NEW-INFERENCE.npz --device cpu
+.venv\Scripts\python.exe -m pcp evaluate --index data/features-120/index.json --checkpoint runs/dev120-if-regional-s17/best.pt --out outputs/NEW-VALIDATION.json
+.venv-pocketminer\Scripts\python.exe scripts/pocketminer_baseline.py --index data/prepared-120/index.json --cohort dev120 --out runs/NEW-POCKETMINER-RUN
+```
 
-NEXT STAGE: .venv\Scripts\python.exe -u scripts/run_dev120.py (prepare120 is complete). It audits data, extracts IF, profiles, fits baseline and runs regional/auxiliary/pocket at seeds17/23/47 for20epochs. Completed-stage checks and checkpoint resume prevent duplicate fits. Review metrics and exposure audit before any further experiment. Energy remains disabled in larger runs. scripts/summarize_dev.py rebuilds current small-run evidence table.
+Do not rerun completed training under existing IDs. Resume only interrupted runs using the same config/index plus --resume <run>/last.pt. Standalone inference FASTA must match the resolved selected chain exactly. Diagnostic shuffled/mask-only checkpoints are deliberately rejected for deployment inference.
 
-ACTIVE: larger experiment PID 11740, dev120.log/dev120.err.log. Keep running; do not duplicate. Initial preparation/feature-control jobs completed. PocketMiner retry uses its separate environment.
+Known limitations: single standard-chain geometric protocol (multichain A-B selections excluded); missing/modified residues and ligand mapping can cause exclusions; selected holo supervises contacts while pocket labels union selected-chain annotations; official PocketMiner preprocessing is adapted, not an exact published benchmark reproduction; pretraining overlap unknown. Larger subset is sorted PDB IDs, not representative random sampling. Full CATH/SCOP audit, strong sequence baseline, pocket-level metrics and final locked evaluation are incomplete.
 
-PocketMiner baseline SUCCESS: runs/dev24-pocketminer-v2/metrics.json. Reproduction command .venv-pocketminer\Scripts\python.exe scripts/pocketminer_baseline.py --out runs/NEW-ID . Initial failed directories/logs preserved. scripts/fetch_external.py retrieves pinned code/weights without full repos. Larger9-overlap audit is a development caveat, not grounds to call this family-disjoint.
-
-Verified checkpoint: runs/dev120-if-regional-s17/best.pt SHA256 ffc1d268b721c615e924bdcdaaba2099a62c5a1d4f9e4c4ab04e8726767cf482. Complete transfer outputs/dev120-regional-s17-transfer.zip SHA256 cd0cc3ef4a90a455b29cbd9da70361e9d0190449b74f973f0d931abca1d63ca4 (139files, imported/verified). Full worker scripts/prepare_full.py is ready; it prepares only official training folds, audits, appends state, and pushes authorized status on completion. No running jobs currently; launch after final handoff save.
+Use the isolated .venv; see requirements-lock.txt and requirements-pocketminer-lock.txt. Do not reinstall CUDA unnecessarily. Keep data/checkpoints outside Git. Update state/handoff/tasks and commit/push coherent stages. No paid cloud compute, submissions or new public publication.

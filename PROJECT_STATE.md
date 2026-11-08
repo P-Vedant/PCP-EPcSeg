@@ -1,38 +1,35 @@
-# Project state
+# Project state — current
 
-Objective: apo-only cryptic-site segmentation coupled to regional contact formation/breakage prediction. Research hypothesis, not established novelty.
+Objective: reproduce and test apo-only cryptic-pocket localization with regional contact-change prediction. This is an ongoing research project, not a publication-ready result.
 
-Checkout: `C:\Users\nagan\PCP-EPcSeg\PCP-EPcSeg`, branch `research/bootstrap`. Machine A is Windows, RTX 5070 **Laptop** GPU, 8,151 MiB, driver 592.27, 32 GB RAM. B is unavailable. No cloud compute used. Existing user-requested GitHub remote is public; only code, documentation, configs and numeric run records are pushed.
+Checkout: C:\Users\nagan\PCP-EPcSeg\PCP-EPcSeg
+Branch: research/bootstrap. Verified implementation revision: 169c2075476de808ae7242c770d75ed08f97ada3 (or later handoff commits).
+Machine A: RTX5070 Laptop, 8151MiB, Windows, 32GB RAM; driver592.27, Python3.11.9, torch2.11.0+cu128. Partner B unavailable/unverified. No cloud compute used.
 
-## Executed and verified
+## Implemented, executed and validated
 
-- Isolated Python 3.11.9 / torch 2.11.0+cu128; real CUDA forward/backward/AdamW passed on sm_120; pip dependency check passed.
-- Official CryptoBench metadata downloaded from OSF: 1,107 apo IDs; 222 test and four disjoint training folds. MIT source/data metadata verified. Upstream Git SHA 9a3432f479325ca3c9fdc3b8612715ab5b6edecc.
-- Initial development subset: 21 training / 8 validation proteins, 3 exclusions. No exact UniProt or >=30% identity / >=80% aligned coverage overlap between these selected train/validation chains. This does not establish family independence.
-- User's prior 16 apo and paired chains saved in configs/prior_exposure.json. 3NX1 overlaps official test; 2W9T and 5NIA overlap official training. Official test results remain locked.
-- Geometry logistic/random forest, pocket-only, ordinary auxiliary-contact, and regional/contact-feedback models all ran for matched 8-epoch neural configurations, seed 17. Saved models, per-residue/contact/region predictions, metrics and provenance.
-- Four tests pass: rigid-motion invariance and apo-only schema; finite one-batch overfit and exact optimizer checkpoint next-step equivalence; identical-structure contact labels/missing-energy masking; archive path safety.
-- GPU-trained checkpoint loaded for real apo-only CPU inference and CPU validation. Three-file transfer archive exported/imported and hashes verified. RTX 3070 portability remains unverified.
-- 1,030,642 allocated model parameters. 20 warmed steps at N=128/284/532: ~0.0153-0.0159 sec/step; max allocated 227,280,384 bytes, reserved 308,281,344 bytes. This does not cover longer proteins or the partner GPU.
-- Whole-context frozen ProteinMPNN features: 29/29 successful, ~14.05 sec extraction. Official code/checkpoint pinned to 8907e6671bfbfc92303b5f79c4b5e6ce47cdef57; hash-rich feature index saved.
-- OpenMM 8.6.1 successfully computed whole-system potential and residue force magnitudes for 1A4U; pH7, Amber14/OBC2, explicit removal of 165 crystal waters, no cofactor deletion or heavy-atom repair. Initial water-template failure preserved. Coverage/usefulness not yet established.
+- Real CUDA forward/backward/optimizer; isolated dependency check; four meaningful core tests.
+- Versioned mmCIF preparation, ligand identity checks, residue/sequence mapping, apo-only sparse edges, contact labels and formation-coverage audit. Official test evaluation is disabled.
+- Four-layer width96 geometric model, 12 learned regions, region-pair contact formation/breakage and feedback; 1,030,642 allocated parameters. Baseline logistic/forest, pocket-only, ordinary auxiliary-contact comparisons.
+- Train-only normalization/class weights; seeded runs; epoch/ten-minute checkpoints with optimizer/scheduler/scaler/RNG/sampler position; immutable manifests, model/feature/data hashes; no overwrite of existing runs.
+- Frozen whole-context ProteinMPNN:29/29 small cohort,132/132 larger cohort. Apo-only inference automatically caches frozen features; CPU inference matches prepared-feature inference within1.2e-6 probability.
+- OpenMM Amber14/OBC2 context adapter; explicit crystal-water replacement, no cofactor deletion;8/29 valid proteins. Bounded/concat/no-energy/missingness-only and IF-shuffle controls executed. Energy disabled in larger selected configs.
+- Official PocketMiner frozen code/weights ran on8 and35validation proteins; all model variables verified; explicit mmCIF mapping and masks, author atom order/nm units. Isolated TensorFlow2.15.1 CPU environment.
+- Nine larger neural runs:97training/35validation, seeds17/23/47,20epochs. Matched numeric evidence in docs/DEV120_RESULTS.md.
+- GPU-trained checkpoint loaded on CPU; exact next optimizer step checkpoint equivalence tested; shuffled-feature evaluation replay reproduced metrics exactly. Cross-GPU loading remains pending.
+- Complete139-file run/data transfer archive exported, SHA-256 verified on import. Checkpoint/transfer hashes in HANDOFF.md.
+- Profiled20warmed steps at N59/275/831:0.0155–0.0182sec/step; max allocated349,337,088bytes, reserved392,167,424bytes. Not a partner-GPU guarantee.
 
-## Evidence and decision
+## Findings and claim boundary
 
-Small-subset validation macro AP: logistic .1375338; forest .1407221; pocket .1308283; ordinary auxiliary .1300634; regional .1302436. Regional gain over strongest measured baseline is negative. No novelty/performance promotion supported. Eight validation proteins and one seed are debugging evidence only.
+Larger mean validation macroAP: regional .255615, ordinary auxiliary .255062, pocket-only .248865. Official PocketMiner .262020. Identical-mask regional mean-seed minus PocketMiner: -.005872, paired-protein95%[-.050246,.039338]. Regional-vs-auxiliary gains are [-.001551,.000196,.003014]. The +.03 promotion gate is NOT met; no demonstrated regional-mechanism advantage or SOTA claim.
 
-Candidate formation coverage: 1,638 / 1,854 true resolved formed contacts (~88.35%). Omitted contacts cannot be predicted by this candidate set. Region attention does not identify functional domains or trajectories.
+No family independence: nine larger train/validation pairs exceed30%identity/80%coverage. Prior16apo/paired chains and known CATH overlap are saved in configs/prior_exposure.json;3NX1 appears in official test. Official protocols and any new independent split must remain separate. All test performance remains locked.
 
-## Pending / running
+## Current phase and pending work
 
-See active-job.json (or active-jobs.json if present) and HANDOFF.md before starting jobs. Matched IF runs and energy coverage are the next stage. Expand official-training-only data after these checks; full benchmark and family-separated evaluation remain pending. External PocketMiner/pLM baselines, energy usefulness/missingness controls, additional seeds, pocket-level localization, family CIs, full prior-homolog/CATH audit, and cross-GPU loading are not completed. Candidate-state energy/surfaces are optional and unimplemented.
+Full eligible official-training preparation/audit is the next durable worker: scripts/prepare_full.py. It requests666training and219validation apo IDs from the official training pool, records exclusions, runs sequence audit, saves a handoff and pushes authorized status on completion. Check active-jobs.json and actual PID/logs; never duplicate a live job. Its final handoff is docs/FULL_DATA_PREP_HANDOFF.md.
 
-PowerShell execution policy blocks .ps1 launch on this device. Use Python launchers; system policy was not changed. Everything required to continue is on disk. Do not rerun existing run IDs or overwrite checkpoints.
+Pending: full-data coverage; prior aliases/duplicate/full-sequence/homolog/CATH/SCOP audit; a strong sequence benchmark; pocket-level localization metrics; family-stratified uncertainty/controls; full-data final configuration freeze and locked evaluation; partner-GPU portability. Candidate-state energy and surfaces remain optional/unimplemented. Do not expand architecture to hide the failed regional ablation.
 
-Feature stage completed: IF regional macro-AP 0.1335144, IF auxiliary 0.1341352, IF pocket-only 0.1356839. Energy preparation succeeded for 8/29 proteins; coverage index data/energy-24/index.json. No active training jobs. External PocketMiner install did NOT start: automatic approval review hit usage limit.
-
-Energy controls and IF-shuffle runs completed; numeric table docs/DEV_RESULTS.md. Coverage 5/21 train and 3/8 val. Candidate regional minus forest paired-protein95% interval [-.02913,.00965], mean -.01048. Expanded prepare120 completed; inspect its index for exclusions. Next fixed larger experiment: 20 epochs, seeds17/23/47, regional/auxiliary/pocket with IF, energy disabled due limited coverage; no test access.
-
-Official PocketMiner executed successfully on8 validation proteins with frozen official code/weights and strict variable restore; macroAP .3020973 vs matched forest .1407749 and IF-regional .1335144. Adapted mmCIF mapping; 1 residue masked. Larger audit found9 train/validation sequence-overlap pairs at30%identity/80%coverage: not family-disjoint. Preserve official split; no independence claim. DEV120 matrix remains running.
-
-COMPLETED larger development stage: 97 train/35 validation; MPNN132/132;9 neural runs20epochs at seeds17/23/47. Mean macroAP regional .255615, auxiliary .255062, pocket .248865. Official PocketMiner .262020; matched-mask regional mean-seed delta -.005872 (protein bootstrap95%[-.050246,.039338]). Regional promotion gate NOT met. All jobs finished. Apo-only IF inference matched prepared pathway within1.2e-6; diagnostic evaluation replay exact;139-file full transfer verified. Next: full eligible official-training data preparation/audit only, with no test evaluation or architecture expansion.
+Data/cache/checkpoints/external code/environments remain ignored. Source/state commits are pushed to the user's existing origin. PowerShell .ps1 execution was blocked; Python launchers are used without changing system policy. Read HANDOFF.md for next commands.
