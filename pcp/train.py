@@ -117,7 +117,7 @@ def train(index_path, run_dir, config, resume=None):
         return {"model": model.state_dict(), "optimizer": optimizer.state_dict(), "scheduler": scheduler.state_dict(),
                 "scaler": scaler.state_dict(), "epoch": epoch, "offset": offset, "order": order,
                 "best": best, "rng": rng_state(), "mean": mean, "std": std,
-                "index_sha256": sha256(index_path), "config": config, "code_commit": revision()}
+                "index_sha256": sha256(index_path), "config": config, "code_commit": provenance["commit"]}
     started = last_save = time.monotonic()
     if device.type == "cuda":
         torch.cuda.reset_peak_memory_stats()

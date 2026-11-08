@@ -57,6 +57,10 @@ class CoreTests(unittest.TestCase):
             path=Path(d)/"state.pt"; save_checkpoint(path,{"model":model.state_dict(),"optimizer":opt.state_dict()})
             restored=RegionalPocket(); state=torch.load(path,weights_only=True); restored.load_state_dict(state["model"])
             torch.testing.assert_close(model(inputs)["pocket_logits"],restored(inputs)["pocket_logits"])
+            resumed_opt=torch.optim.AdamW(restored.parameters(),lr=.001); resumed_opt.load_state_dict(state["optimizer"])
+            for m,o in ((model,opt),(restored,resumed_opt)):
+                o.zero_grad(); loss_fn(m(inputs),target,inputs["edges"],weights,m.mode).backward(); o.step()
+            for p,q in zip(model.parameters(),restored.parameters()): torch.testing.assert_close(p,q,rtol=0,atol=0)
 
     def test_contact_labels_and_missing_energy(self):
         r=example(); a=apo_features(r); labels,mask,audit=contact_targets(r,r,a)

@@ -10,6 +10,9 @@ def main():
     p = sub.add_parser("hardware"); p.add_argument("--out", default="outputs/hardware.json")
     p = sub.add_parser("prepare"); p.add_argument("--root", default="data"); p.add_argument("--limit", type=int, default=24)
     p = sub.add_parser("audit"); p.add_argument("--index", required=True)
+    p = sub.add_parser("features"); p.add_argument("--index", required=True); p.add_argument("--output", required=True); p.add_argument("--device", default="cuda"); p.add_argument("--shard", type=int, choices=range(32))
+    p = sub.add_parser("energy"); p.add_argument("--structure", required=True); p.add_argument("--out", required=True); p.add_argument("--openmm", action="store_true")
+    p = sub.add_parser("energy-cache"); p.add_argument("--index", required=True); p.add_argument("--output", required=True)
     p = sub.add_parser("baseline"); p.add_argument("--index", required=True); p.add_argument("--run", required=True)
     p = sub.add_parser("train"); p.add_argument("--index", required=True); p.add_argument("--run", required=True); p.add_argument("--config", required=True); p.add_argument("--resume")
     p = sub.add_parser("profile"); p.add_argument("--index", required=True); p.add_argument("--out", default="outputs/profile.json")
@@ -40,6 +43,16 @@ def main():
     elif args.command == "audit":
         from .audit import audit
         print(json.dumps(audit(args.index), indent=2))
+    elif args.command == "features":
+        from .features import extract_mpnn
+        print(extract_mpnn(args.index, args.output, device=args.device, shard=args.shard))
+    elif args.command == "energy":
+        from .energy import score_context
+        result=score_context(args.structure,args.out,args.openmm)
+        print(json.dumps({k:v for k,v in result.items() if k != "clash_counts"},indent=2))
+    elif args.command == "energy-cache":
+        from .energy import extract_energy
+        print(extract_energy(args.index,args.output))
     elif args.command == "baseline":
         from .train import baseline
         result = baseline(args.index, args.run)

@@ -1,15 +1,14 @@
-# Tasks
+# Task ownership and status
 
-| ID | Owner | Status | Dependencies | Files |
+| ID | Owner | Status | Dependencies | Files / result |
 |---|---|---|---|---|
-| T01 | A | active | none | environment, state files, configs |
-| T02 | A | pending | T01 | data preparation, splits, audit |
-| T03 | A | pending | T02 | baseline, metrics |
-| T04 | A | pending | T02 | regional model, trainer, inference |
-| T05 | B | unassigned | T02 | frozen ProteinMPNN adapter |
-| T06 | B | unassigned | T02 | energy, established predictors |
-| T07 | A | pending | T03-T06 | ablations, locked evaluation, transfer |
+| T01 | A | complete / verified | none | isolated env, CUDA smoke, hardware/profile, requirements lock |
+| T02 | A | partial / dev subset verified | T01 | data.py/audit.py; 21 train/8 val; full benchmark and family/exposure audit pending |
+| T03 | A | dev baseline complete | T02 | train.py/metrics.py; LR/RF predictions and metrics |
+| T04 | A | core implemented / dev runs verified | T02 | model.py, trainer/CLI, 3 matched no-IF neural configs; CPU checkpoint inference and transfer verified |
+| T05 | A (B unavailable) | features extracted; comparisons next | T02 | features.py; frozen MPNN 29/29; cached shard schema |
+| T06 | A (B unavailable) | one energy context verified; coverage next | T02 | energy.py; Amber14/OBC2 with explicit solvent policy; official predictor execution pending |
+| T07 | A | partial | T03-T06 | initial ablations and bootstrap; full seeds/family metrics/locked evaluation pending |
+| T08 | B | unassigned / remote unverified | T04 | cross-3070 checkpoint load and independent jobs; see docs/MACHINE_B.md |
 
-Shared schema changes are integrated by A. B is not connected; commands do not imply remote execution.
-
-T01 completed/validated: CUDA optimizer and isolated dependency checks passed. T02 initial development subset completed: 21 train, 8 val; 3 explicit exclusions. Full family/prior-homolog audit pending. T03/T04 running next via Python launcher; T05/T06 still pending.
+Shared schema v1 is in docs/SCHEMA.md; A integrates schema changes. B must use disjoint SHA-256 shard IDs and separate run directories. This is not a Git-based live queue. Do not concurrently append one shared manifest across machines.

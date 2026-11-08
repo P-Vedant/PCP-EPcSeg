@@ -27,7 +27,7 @@ class ApoInput:
     sequence: str
 
 
-def parse_structure(path, chain_id):
+def parse_structure(path, chain_id, min_residues=8):
     parser = MMCIFParser(QUIET=True) if str(path).endswith(".cif") else PDBParser(QUIET=True)
     model = parser.get_structure("protein", str(path))[0]
     positions = {}
@@ -55,8 +55,8 @@ def parse_structure(path, chain_id):
             raise ValueError(f"no polymer sequence position for {rid}")
         residues.append({"id": rid, "seqpos": positions.get(rid, r.id[1]),
                          "aa": letter, "atoms": atoms})
-    if len(residues) < 8:
-        raise ValueError("fewer than 8 resolved CA residues")
+    if len(residues) < min_residues:
+        raise ValueError(f"fewer than {min_residues} resolved CA residues")
     return residues, model
 
 
