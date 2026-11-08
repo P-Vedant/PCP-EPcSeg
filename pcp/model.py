@@ -29,7 +29,7 @@ class RegionalPocket(nn.Module):
         self.config = dict(input_dim=input_dim, width=width, layers=layers, regions=regions,
                            mode=mode, use_if=use_if, use_energy=use_energy, energy_mode=energy_mode)
         self.mode, self.use_if, self.use_energy, self.energy_mode = mode, use_if, use_energy, energy_mode
-        self.encode = mlp(input_dim, width)
+        self.encode = mlp(input_dim + (4 if use_energy and energy_mode == "concat" else 0), width)
         self.if_adapter = mlp(24, width, 96)
         self.energy_adapter = mlp(4, width, 96)
         self.energy_gate = nn.Parameter(torch.tensor(-2.0))
@@ -41,12 +41,15 @@ class RegionalPocket(nn.Module):
 
     def forward(self, apo):
         # An explicit allowlist prevents accidental target access.
-        h = self.encode(apo["x"])
+        if self.use_energy and self.energy_mode == "concat":
+            h = self.encode(torch.cat([apo["x"], apo["energy"] * apo["energy_mask"], apo["energy_mask"]], -1))
+        else:
+            h = self.encode(apo["x"])
         if self.use_if:
             h = h + self.if_adapter(torch.cat([apo["if_features"], apo["if_mask"]], -1)) * apo["if_mask"]
-        if self.use_energy:
+        if self.use_energy and self.energy_mode != "concat":
             raw = self.energy_adapter(torch.cat([apo["energy"], apo["energy_mask"]], -1))
-            energy = raw if self.energy_mode == "concat" else self.energy_gate.sigmoid() * raw.tanh()
+            energy = self.energy_gate.sigmoid() * raw.tanh()
             h = h + energy * apo["energy_mask"]
         edges, attrs = apo["edges"], apo["edge_attr"]
         for layer in self.layers:
