@@ -49,4 +49,15 @@ Replace the inference structure and FASTA placeholders; FASTA must match the res
 
 Core implemented architecture: four invariant distance-based message-passing layers, width 96, 12 learned regions; symmetric region-pair contact factors; predicted incident contacts feed pocket decoding. `auxiliary` removes regions and feedback while retaining the same module parameter allocation; `pocket` omits contact supervision. Inactive parameters are retained for interface compatibility, so effective trained capacity is not exactly matched.
 
-Frozen inverse folding, physical energy integration, established external predictors, full family-separated analysis and final locked evaluation are tracked separately; interfaces or written commands do not establish that they ran. Read `docs/SCHEMA.md`, `DATA_AUDIT.md`, `CLAIMS.md` and `docs/PRIOR_ART.md` before making scientific claims.
+Frozen ProteinMPNN extraction, OpenMM context scoring, energy controls and official PocketMiner checkpoint inference have now executed. See `docs/DEV_RESULTS.md` and `docs/DEV120_RESULTS.md` for actual evidence. The larger stage has 97training/35validation proteins and three seeds; regional factorization has not demonstrated a meaningful advantage over ordinary contact supervision. Full eligible official training data, family/exposure analysis, a strong sequence baseline, pocket-level localization and locked evaluation remain pending. Read `docs/SCHEMA.md`, `DATA_AUDIT.md`, `CLAIMS.md` and `HANDOFF.md` before making scientific claims.
+
+Optional feature commands:
+
+```powershell
+.venv\Scripts\python.exe scripts/fetch_external.py
+.venv\Scripts\python.exe -m pcp features --index data/prepared-24/index.json --output data/features-24
+.venv\Scripts\python.exe -m pcp energy-cache --index data/features-24/index.json --output data/energy-24
+.venv-pocketminer\Scripts\python.exe scripts/pocketminer_baseline.py --index data/prepared-120/index.json --cohort dev120 --out runs/NEW-POCKETMINER-RUN
+```
+
+PocketMiner needs a separate environment installed with `requirements-pocketminer-lock.txt`; its author code/checkpoint are fetched above. `infer` automatically caches apo-only IF/energy features when enabled by a checkpoint; it requires no paired structure or labels. CPU inference with IF was executed and matched the prepared-feature pathway to 1.2e-6 probability tolerance. Energy failures remain masked and recorded. Use Python job launchers on this machine because its default policy blocks `.ps1` files.

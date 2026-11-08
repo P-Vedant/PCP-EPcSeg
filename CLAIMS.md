@@ -7,3 +7,5 @@ Observed development evidence: strongest measured geometry baseline forest macro
 Unsupported/pending: competitiveness against official PocketMiner or strong sequence predictors; family-disjoint/generalization claims; benefit from regional factorization/contact feedback/IF/energy; full feature/energy ablations; independent-cohort uncertainty; physical conformations, trajectories, causal couplings, energy barriers, rates or opening probabilities; cross-GPU execution on RTX3070.
 
 No state-of-the-art claim, validated new CV method or publication-readiness claim is justified. Continue the reproducible evaluation before deciding whether to pursue the regional formulation. If the proposed mechanism fails matched ablation, preserve the negative result and narrow the contribution.
+
+Larger development comparison is now executed: regional mean macroAP .255615 vs ordinary auxiliary .255062 over3seeds on35validation proteins. PocketMiner same-mask comparison yields regional mean-seed delta -.005872 with paired-protein95%[-.050246,.039338]. Gate not met; no demonstrated regional mechanism advantage. Full dataset/family/strong-sequence baseline remain pending.

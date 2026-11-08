@@ -39,7 +39,7 @@ def extract_mpnn(index_path, output, external="external/ProteinMPNN", device="cu
             updated.append(record); continue
         r = dict(record)
         try:
-            path = Path("data/raw")/f"{r['apo_id']}.cif"
+            path = Path(r.get("apo_path", str(Path("data/raw")/f"{r['apo_id']}.cif")))
             provenance = {"apo_sha256":sha256(path), "prepared_sha256":r["sha256"], "settings":settings}
             key = hashlib.sha256(json.dumps(provenance, sort_keys=True).encode()).hexdigest()
             target = out/f"{r['id']}-{key[:12]}.npz"

@@ -18,3 +18,5 @@ T05 completed first matched IF runs; no improvement over forest. T06 coverage ex
 T06 energy bounded/concat/mask-only and within-protein IF-shuffle controls completed on29 rows. T02 prepare120 complete; audit next. T07 larger 3-seed matrix next. PocketMiner baseline environment installed; first execution missing tqdm, now installed; checkpoint execution retry pending.
 
 T06 official PocketMiner checkpoint baseline complete on8 proteins; TensorFlow2.15.1 CPU, author checkpoint .write paired with .read, all model variables matched. Larger-cohort evaluation next.
+
+T07 three-seed dev120 matrix COMPLETE, plus official PocketMiner on35 same validation proteins. No promotion evidence. T04 apo-only cached IF inference and diagnostic checkpoint replay verified. T02 full training-data preparation/audit queued; independent-test/family controls still pending.

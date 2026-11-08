@@ -17,3 +17,5 @@ Observed candidate formation coverage: 1,638/1,854 resolved true formed contacts
 Frozen MPNN code/checkpoint: 8907e6671bfbfc92303b5f79c4b5e6ce47cdef57, v_48_020, noise=0, unconditional structure-conditioned probabilities. 29/29 extracted. Structure/code/checkpoint/settings hashes and masks are in data/features-24/index.json and sidecars. Outputs are compatibility statistics, not physical energies.
 
 Energy: Amber14/OBC2 implicit solvent, pH7, retained protein/ions/cofactors; remove only crystal waters explicitly with count. Hydrogens added, no missing-heavy-atom repair or minimization. Full 1A4U succeeded after water-policy correction. Multi-protein coverage and label/family bias are pending. Missing energy must remain masked; no cofactor deletion to force parameterization.
+
+Larger development:97train/35val,28explicit exclusions. No UniProt overlap;9 global-alignment pairs exceed30%identity/80%longer-chain coverage, so no family-disjoint claim. Formation candidate coverage7426/8568. MPNN132/132successful. See data/prepared-120/audit.json and docs/DEV120_RESULTS.md. All official test results remain locked.

@@ -10,6 +10,7 @@ from .data import load_records
 from .io import atomic_json, sha256, manifest, hardware, revision, now
 from .metrics import evaluate_predictions
 from .model import RegionalPocket, loss_fn
+from .ablations import apply_controls
 
 
 def tensors(z, device, mean, std):
@@ -72,21 +73,7 @@ def train(index_path, run_dir, config, resume=None):
     if run_dir.exists() and not resume:
         raise FileExistsError(f"refusing to overwrite {run_dir}; choose a new run or --resume")
     run_dir.mkdir(parents=True, exist_ok=True)
-    records = load_records(index_path)
-    if config.get("shuffle_if") or config.get("energy_values") == "zero":
-        import hashlib
-        altered = []
-        for r,z in records:
-            z = dict(z)
-            if config.get("shuffle_if") and "if_features" in z:
-                local_seed = config["seed"] + int(hashlib.sha256(r["id"].encode()).hexdigest()[:8],16)
-                permutation = np.random.default_rng(local_seed).permutation(len(z["x"]))
-                z["if_features"] = z["if_features"][permutation]
-                z["if_mask"] = z["if_mask"][permutation]
-            if config.get("energy_values") == "zero" and "energy" in z:
-                z["energy"] = np.zeros_like(z["energy"])
-            altered.append((r,z))
-        records = altered
+    records = apply_controls(load_records(index_path),config)
     tr = [(r,z) for r,z in records if r["split"] == "train"]
     val = [(r,z) for r,z in records if r["split"] == "val"]
     if not tr or not val:

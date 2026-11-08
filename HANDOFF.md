@@ -54,3 +54,5 @@ NEXT STAGE: .venv\Scripts\python.exe -u scripts/run_dev120.py (prepare120 is com
 ACTIVE: larger experiment PID 11740, dev120.log/dev120.err.log. Keep running; do not duplicate. Initial preparation/feature-control jobs completed. PocketMiner retry uses its separate environment.
 
 PocketMiner baseline SUCCESS: runs/dev24-pocketminer-v2/metrics.json. Reproduction command .venv-pocketminer\Scripts\python.exe scripts/pocketminer_baseline.py --out runs/NEW-ID . Initial failed directories/logs preserved. scripts/fetch_external.py retrieves pinned code/weights without full repos. Larger9-overlap audit is a development caveat, not grounds to call this family-disjoint.
+
+Verified checkpoint: runs/dev120-if-regional-s17/best.pt SHA256 ffc1d268b721c615e924bdcdaaba2099a62c5a1d4f9e4c4ab04e8726767cf482. Complete transfer outputs/dev120-regional-s17-transfer.zip SHA256 cd0cc3ef4a90a455b29cbd9da70361e9d0190449b74f973f0d931abca1d63ca4 (139files, imported/verified). Full worker scripts/prepare_full.py is ready; it prepares only official training folds, audits, appends state, and pushes authorized status on completion. No running jobs currently; launch after final handoff save.

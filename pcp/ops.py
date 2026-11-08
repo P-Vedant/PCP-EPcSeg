@@ -3,7 +3,8 @@ import time
 from pathlib import Path
 import numpy as np
 import torch
-from .data import apo_features, parse_structure, load_records
+from .data import apo_features, parse_structure, load_records, PREPROCESS_VERSION
+from .ablations import apply_controls
 from .io import atomic_json, hardware, sha256, manifest
 from .model import RegionalPocket, loss_fn
 from .train import tensors, evaluate
@@ -51,9 +52,10 @@ def load_model(checkpoint, device):
 
 
 def infer(structure, chain, sequence_file, checkpoint, out, device):
+    preprocess_start = time.perf_counter()
     model, state = load_model(checkpoint, device)
-    if model.use_if or model.use_energy:
-        raise ValueError("this structure-only CLI does not yet extract enabled cached IF/energy features")
+    if state["config"].get("shuffle_if") or state["config"].get("energy_values") == "zero":
+        raise ValueError("diagnostic shuffled/missingness-only checkpoints are not deployment models")
     residues, _ = parse_structure(structure, chain)
     apo = apo_features(residues)
     sequence = "".join(line.strip() for line in Path(sequence_file).read_text().splitlines() if not line.startswith(">"))
@@ -61,10 +63,51 @@ def infer(structure, chain, sequence_file, checkpoint, out, device):
     if sequence != apo.sequence:
         raise ValueError("FASTA must match the resolved selected chain; map missing positions explicitly first")
     z = {"x":apo.x,"edges":apo.edges,"edge_attr":apo.edge_attr}
+    feature_provenance = {}
+    if model.use_if or model.use_energy:
+        import hashlib
+        key=hashlib.sha256((sha256(structure)+chain+sha256(sequence_file)+PREPROCESS_VERSION).encode()).hexdigest()
+        cache=Path("cache/inference")/key
+        cache.mkdir(parents=True,exist_ok=True)
+        source=cache/"apo-only.npz"
+        if not source.exists():
+            with open(str(source)+".tmp","wb") as f:
+                np.savez_compressed(f,**z,coords=apo.coords,residue_ids=apo.residue_ids,sequence=apo.sequence)
+            import os
+            os.replace(str(source)+".tmp",source)
+        if model.use_if:
+            from .features import extract_mpnn
+            input_index=cache/"apo-only.json"
+            atomic_json(input_index,{"records":[{"id":"apo-inference","apo_id":Path(structure).stem,
+                        "apo_path":str(Path(structure).resolve()),"path":str(source),"sha256":sha256(source),"shard":0}]})
+            feature_index=extract_mpnn(input_index,cache/"mpnn",device=device)
+            record=json.loads(feature_index.read_text())["records"][0]
+            if "if_provenance" not in record:
+                raise RuntimeError("apo-only ProteinMPNN extraction failed; inspect feature-progress.json")
+            with np.load(record["path"],allow_pickle=False) as f:
+                z.update(if_features=f["if_features"],if_mask=f["if_mask"])
+            feature_provenance["mpnn"]=record["if_provenance"]
+        if model.use_energy:
+            from .energy import score_context
+            from . import energy as energy_module
+            import openmm
+            path=cache/f"energy-{sha256(energy_module.__file__)[:12]}-{openmm.__version__}.json"
+            result=json.loads(path.read_text()) if path.exists() else score_context(structure,path,True)
+            values=np.zeros((len(apo.x),3),np.float32); mask=np.zeros((len(apo.x),1),np.float32)
+            if result["openmm"]["valid"]:
+                force=result["openmm"]["residue_mean_force"]
+                for i,rid in enumerate(apo.residue_ids):
+                    if str(rid) in force:
+                        values[i]=[np.log1p(result["clash_counts"].get(str(rid),0)),np.log1p(force[str(rid)]),0]
+                        mask[i]=1
+            z.update(energy=values,energy_mask=mask)
+            feature_provenance["energy"]={"path":str(path),"sha256":sha256(path),"valid":result["openmm"]["valid"]}
     inputs, _ = tensors(z, device, state["mean"], state["std"])
+    preprocess_seconds = time.perf_counter()-preprocess_start
     start = time.perf_counter()
     with torch.no_grad(): pred = model(inputs)
     if device.startswith("cuda"): torch.cuda.synchronize()
+    model_seconds = time.perf_counter()-start
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(out, scores=pred["pocket_logits"].sigmoid().cpu().numpy(),
                         contacts=pred["contact_logits"].sigmoid().cpu().numpy(),
@@ -72,7 +115,8 @@ def infer(structure, chain, sequence_file, checkpoint, out, device):
                         edges=apo.edges, coords=apo.coords)
     atomic_json(out+".json", {"structure_sha256":sha256(structure), "sequence_sha256":sha256(sequence_file),
                               "checkpoint_sha256":sha256(checkpoint), "chain":chain,
-                              "model_forward_seconds":time.perf_counter()-start,
+                              "preprocessing_seconds":preprocess_seconds,"model_forward_seconds":model_seconds,
+                              "cached_feature_provenance":feature_provenance,
                               "input_protocol":"single resolved chain; apo only; no holo/ligand/targets"})
 
 
@@ -83,6 +127,6 @@ def evaluate_checkpoint(index, checkpoint, out, split):
     model, state = load_model(checkpoint, "cpu")
     if sha256(index) != state["index_sha256"]:
         raise ValueError("checkpoint data index differs")
-    rows = [(r,z) for r,z in load_records(index) if r["split"]==split]
+    rows = [(r,z) for r,z in apply_controls(load_records(index),state["config"]) if r["split"]==split]
     result = evaluate(model, rows, "cpu", state["mean"], state["std"], Path(out).parent/"eval-predictions")
     atomic_json(out, result)
