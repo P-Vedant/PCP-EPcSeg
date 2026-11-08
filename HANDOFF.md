@@ -14,3 +14,5 @@ Keep all data, features and checkpoints out of Git. Update this file after every
 Latest: configs/prior_exposure.json contains the user-supplied exposure list. Check prepare-24.log and install-project.log. Preparation launched in exec session 27263. Do not duplicate until logs/index checked. Current uncommitted source implements data preparation, sparse regional model and trainer; CLI/tests next.
 
 Next exact command: powershell -NoProfile -File scripts/run_dev.ps1. It runs baseline, 20-step profile, and 8-epoch regional/auxiliary/pocket comparisons sequentially. It refuses existing run directories. Check runs and active-job.json before launching. Source code now verified by four CPU tests and CUDA smoke test.
+
+PowerShell script launch was blocked by Windows execution policy; no experiments ran. Use .venv\Scripts\python.exe -u scripts/run_dev.py instead. No system policy changed. Python runner is sequential and fails on errors.
