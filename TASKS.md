@@ -18,3 +18,5 @@ Full training-data preparation worker complete at 2026-11-08T03:33:04.513846+00:
 T02 full official-training preparation COMPLETE; exposure/CATH screen now implemented/tested, execution next. No new independent-test claim.
 
 T04 pocket-level localization proxy implemented/tested; execution next. T02 exposure/CATH audit running.
+
+T04 pocket-localization proxy implemented/executed/verified on35proteins; exact published ligand-center protocol remains separate. T03 strong sequence-baseline asset inspection in progress.

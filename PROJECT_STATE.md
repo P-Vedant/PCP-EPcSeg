@@ -39,3 +39,5 @@ Full training-data preparation worker complete at 2026-11-08T03:33:04.513846+00:
 Full preparation completed/pushed:569train/175val,141exclusions,321resolved-sequence cross-split links. No live old worker. New full-polymer/alias/CATH audit implemented and targeted tests passed; policy predeclared in docs/EXPOSURE_AUDIT.md.
 
 Pocket-localization proxy implemented with fixed apo-only candidate clustering, annotated-residue target centroids and one-to-one4A matching; targeted invariance/matching tests passed. Evaluation next, no threshold tuning or ligand-center-DCC claim.
+
+Pocket localization proxy executed on35shared validation proteins/41annotation clusters. Top3 protein-hit: PocketMiner2/35; regional1–2/35 across seeds; forest0/35. This strict apo-residue-centroid proxy is not ligand-center DCC; no tuning. Results/centers saved; no regional localization advantage demonstrated.
