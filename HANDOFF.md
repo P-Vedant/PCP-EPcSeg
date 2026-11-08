@@ -46,3 +46,7 @@ LATEST: PID 40820 job completed successfully (FEATURE DEVELOPMENT STAGE COMPLETE
 Approval service recovered. ACTIVE: PocketMiner installation PID 2196 (install-pocketminer.log); development prepare120 PID 38680 (prepare-120.log). Keep running; inspect active-jobs.json, do not duplicate. No system policy changes.
 
 PocketMiner first install failed building optional MDTraj. Reduced official-model environment installing as PID 11988, logs install-pocketminer-core.log/.err.log. Adapter scripts/pocketminer_baseline.py uses equivalent author tensor ordering/units with explicit BioPython residue mapping and strict checkpoint restore verification; no prediction executed yet.
+
+Energy controls launched PID 35428, energy-controls.log/.err.log: bounded, true concatenation, mask-only, within-protein IF shuffle. Code regression tests passed. Original no-energy architecture unchanged.
+
+NEXT STAGE: .venv\Scripts\python.exe -u scripts/run_dev120.py (prepare120 is complete). It audits data, extracts IF, profiles, fits baseline and runs regional/auxiliary/pocket at seeds17/23/47 for20epochs. Completed-stage checks and checkpoint resume prevent duplicate fits. Review metrics and exposure audit before any further experiment. Energy remains disabled in larger runs. scripts/summarize_dev.py rebuilds current small-run evidence table.

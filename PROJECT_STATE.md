@@ -30,3 +30,5 @@ See active-job.json (or active-jobs.json if present) and HANDOFF.md before start
 PowerShell execution policy blocks .ps1 launch on this device. Use Python launchers; system policy was not changed. Everything required to continue is on disk. Do not rerun existing run IDs or overwrite checkpoints.
 
 Feature stage completed: IF regional macro-AP 0.1335144, IF auxiliary 0.1341352, IF pocket-only 0.1356839. Energy preparation succeeded for 8/29 proteins; coverage index data/energy-24/index.json. No active training jobs. External PocketMiner install did NOT start: automatic approval review hit usage limit.
+
+Energy controls and IF-shuffle runs completed; numeric table docs/DEV_RESULTS.md. Coverage 5/21 train and 3/8 val. Candidate regional minus forest paired-protein95% interval [-.02913,.00965], mean -.01048. Expanded prepare120 completed; inspect its index for exclusions. Next fixed larger experiment: 20 epochs, seeds17/23/47, regional/auxiliary/pocket with IF, energy disabled due limited coverage; no test access.

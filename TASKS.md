@@ -14,3 +14,5 @@
 Shared schema v1 is in docs/SCHEMA.md; A integrates schema changes. B must use disjoint SHA-256 shard IDs and separate run directories. This is not a Git-based live queue. Do not concurrently append one shared manifest across machines.
 
 T05 completed first matched IF runs; no improvement over forest. T06 coverage executed: 8/29 valid energy contexts. Matched energy/missingness ablations and official predictor still pending.
+
+T06 energy bounded/concat/mask-only and within-protein IF-shuffle controls completed on29 rows. T02 prepare120 complete; audit next. T07 larger 3-seed matrix next. PocketMiner baseline environment installed; first execution missing tqdm, now installed; checkpoint execution retry pending.
