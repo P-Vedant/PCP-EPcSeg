@@ -29,6 +29,7 @@ from pcp.io import atomic_json,sha256,manifest,revision
 parser=argparse.ArgumentParser()
 parser.add_argument("--index",default="data/prepared-24/index.json")
 parser.add_argument("--out",default="runs/dev24-pocketminer")
+parser.add_argument("--cohort",default="dev24")
 args=parser.parse_args()
 out=Path(args.out); out.mkdir(parents=True,exist_ok=False)
 index=json.loads(Path(args.index).read_text())
@@ -57,7 +58,9 @@ for record in index["records"]:
                 seq[0,i]=lookup[r["aa"]]; mask[0,i]=1
         if not loaded:
             model(x,seq,mask,train=False,res_level=True)
-            status=tf.train.Checkpoint(model=model).restore(checkpoint)
+            # Author util.save_checkpoint uses .write(), so pair it with .read().
+            # Unlike restore(), read() does not require a synthetic save_counter.
+            status=tf.train.Checkpoint(model=model).read(checkpoint)
             status.assert_existing_objects_matched()
             status.expect_partial()  # Only checkpoint optimizer slots are intentionally unused.
             loaded=True
@@ -69,9 +72,9 @@ for record in index["records"]:
         rows.append({"id":record["id"],"y":y[valid],"scores":scores[valid]})
         # Compare every completed development method on exactly the same mask/rows.
         for name,path in {
-            "forest":Path("runs/dev24-baseline-s17")/f"forest-{record['id']}.npz",
-            "regional":Path("runs/dev24-regional-s17/predictions")/f"{record['id']}.npz",
-            "if-regional":Path("runs/dev24-if-regional-s17/predictions")/f"{record['id']}.npz"}.items():
+            "forest":Path(f"runs/{args.cohort}-baseline-s17")/f"forest-{record['id']}.npz",
+            "regional":Path(f"runs/{args.cohort}-regional-s17/predictions")/f"{record['id']}.npz",
+            "if-regional":Path(f"runs/{args.cohort}-if-regional-s17/predictions")/f"{record['id']}.npz"}.items():
             if path.exists():
                 with np.load(path,allow_pickle=False) as z: p=z["scores"]
                 matched.setdefault(name,[]).append({"id":record["id"],"y":y[valid],"scores":p[valid]})

@@ -50,3 +50,7 @@ PocketMiner first install failed building optional MDTraj. Reduced official-mode
 Energy controls launched PID 35428, energy-controls.log/.err.log: bounded, true concatenation, mask-only, within-protein IF shuffle. Code regression tests passed. Original no-energy architecture unchanged.
 
 NEXT STAGE: .venv\Scripts\python.exe -u scripts/run_dev120.py (prepare120 is complete). It audits data, extracts IF, profiles, fits baseline and runs regional/auxiliary/pocket at seeds17/23/47 for20epochs. Completed-stage checks and checkpoint resume prevent duplicate fits. Review metrics and exposure audit before any further experiment. Energy remains disabled in larger runs. scripts/summarize_dev.py rebuilds current small-run evidence table.
+
+ACTIVE: larger experiment PID 11740, dev120.log/dev120.err.log. Keep running; do not duplicate. Initial preparation/feature-control jobs completed. PocketMiner retry uses its separate environment.
+
+PocketMiner baseline SUCCESS: runs/dev24-pocketminer-v2/metrics.json. Reproduction command .venv-pocketminer\Scripts\python.exe scripts/pocketminer_baseline.py --out runs/NEW-ID . Initial failed directories/logs preserved. scripts/fetch_external.py retrieves pinned code/weights without full repos. Larger9-overlap audit is a development caveat, not grounds to call this family-disjoint.

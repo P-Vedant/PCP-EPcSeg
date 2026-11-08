@@ -17,6 +17,7 @@ Regenerate: `.venv\Scripts\python.exe scripts/summarize_dev.py`.
 | dev24-if-regional-s17 | 0.133514 | 0.126550 | 8 |
 | dev24-if-shuffled-s17 | 0.119062 | 0.111892 | 8 |
 | dev24-pocket-s17 | 0.130828 | 0.121990 | 8 |
+| official PocketMiner (adapted mapping) | 0.302097 | 0.289186 | 8 |
 | dev24-regional-s17 | 0.130244 | 0.121650 | 8 |
 
 Regional minus forest: -0.010478; paired protein bootstrap95% interval [-0.029131165775608085, 0.009650430370878293]. Family dependence remains unresolved.

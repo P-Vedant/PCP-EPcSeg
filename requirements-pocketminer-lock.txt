@@ -5,6 +5,7 @@ certifi==2026.10.23
 cffi==2.1.1
 charset-normalizer==3.5.2
 cloudpickle==3.1.2
+colorama==0.4.6
 cryptography==50.0.2
 flatbuffers==25.12.19
 gast==0.7.0
@@ -41,6 +42,7 @@ tensorflow-intel==2.15.1
 tensorflow-io-gcs-filesystem==0.31.0
 termcolor==3.3.0
 threadpoolctl==3.8.0
+tqdm==4.70.1
 typing_extensions==4.16.0
 urllib3==2.8.0
 Werkzeug==3.1.9
