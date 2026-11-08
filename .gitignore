@@ -14,3 +14,5 @@ external/
 *.zip
 *.tar*
 .env
+*.log
+*.egg-info/

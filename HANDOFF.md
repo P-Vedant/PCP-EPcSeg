@@ -10,3 +10,7 @@ Next actions:
 No training jobs/checkpoints/transfer archives yet. Partner execution unverified.
 Unknown identities of prior 16 exposed proteins block a fresh locked test. Do not invent them.
 Keep all data, features and checkpoints out of Git. Update this file after every stage.
+
+Latest: configs/prior_exposure.json contains the user-supplied exposure list. Check prepare-24.log and install-project.log. Preparation launched in exec session 27263. Do not duplicate until logs/index checked. Current uncommitted source implements data preparation, sparse regional model and trainer; CLI/tests next.
+
+Next exact command: powershell -NoProfile -File scripts/run_dev.ps1. It runs baseline, 20-step profile, and 8-epoch regional/auxiliary/pocket comparisons sequentially. It refuses existing run directories. Check runs and active-job.json before launching. Source code now verified by four CPU tests and CUDA smoke test.
