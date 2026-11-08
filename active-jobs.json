@@ -8,9 +8,17 @@
       "script": "scripts/prepare_full.py",
       "stdout": "prepare-full.log",
       "stderr": "prepare-full.err.log",
-      "status": "running",
-      "must_keep_running": true,
-      "official_test_evaluation": false
+      "status": "complete",
+      "must_keep_running": false,
+      "official_test_evaluation": false,
+      "phase": "sequence_audit",
+      "index": "data\\prepared-666\\index.json",
+      "index_sha256": "c381cd88757ac56188fafd4aa62727d114cbb6b4229f4572da3db68ced6d9bdc",
+      "ended": "2026-11-08T03:33:04.513846+00:00",
+      "train": 569,
+      "val": 175,
+      "excluded": 141,
+      "sequence_overlap_pairs": 321
     }
   ]
 }

@@ -33,3 +33,5 @@ Full eligible official-training preparation/audit is the next durable worker: sc
 Pending: full-data coverage; prior aliases/duplicate/full-sequence/homolog/CATH/SCOP audit; a strong sequence benchmark; pocket-level localization metrics; family-stratified uncertainty/controls; full-data final configuration freeze and locked evaluation; partner-GPU portability. Candidate-state energy and surfaces remain optional/unimplemented. Do not expand architecture to hide the failed regional ablation.
 
 Data/cache/checkpoints/external code/environments remain ignored. Source/state commits are pushed to the user's existing origin. PowerShell .ps1 execution was blocked; Python launchers are used without changing system policy. Read HANDOFF.md for next commands.
+
+Full training-data preparation worker complete at 2026-11-08T03:33:04.513846+00:00; PID 568 no longer needs to run. See docs/FULL_DATA_PREP_STATUS.json, docs/FULL_DATA_PREP_HANDOFF.md and prepare-full.log. Official test remains locked.

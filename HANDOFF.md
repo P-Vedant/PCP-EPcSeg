@@ -57,3 +57,5 @@ Do not rerun completed training under existing IDs. Resume only interrupted runs
 Known limitations: single standard-chain geometric protocol (multichain A-B selections excluded); missing/modified residues and ligand mapping can cause exclusions; selected holo supervises contacts while pocket labels union selected-chain annotations; official PocketMiner preprocessing is adapted, not an exact published benchmark reproduction; pretraining overlap unknown. Larger subset is sorted PDB IDs, not representative random sampling. Full CATH/SCOP audit, strong sequence baseline, pocket-level metrics and final locked evaluation are incomplete.
 
 Use the isolated .venv; see requirements-lock.txt and requirements-pocketminer-lock.txt. Do not reinstall CUDA unnecessarily. Keep data/checkpoints outside Git. Update state/handoff/tasks and commit/push coherent stages. No paid cloud compute, submissions or new public publication.
+
+Full training-data preparation worker complete at 2026-11-08T03:33:04.513846+00:00; PID 568 no longer needs to run. See docs/FULL_DATA_PREP_STATUS.json, docs/FULL_DATA_PREP_HANDOFF.md and prepare-full.log. Official test remains locked.
